@@ -16,7 +16,7 @@ procgen-starter-example:
     # === Stop Conditions ===
     ################################################
     stop:
-        timesteps_total: 1000000  # 100
+        timesteps_total: 8000000  # 100
 
     ################################################
     # === Settings for Checkpoints ===
@@ -106,14 +106,14 @@ procgen-starter-example:
             #
             # Filter config. List of [out_channels, kernel, stride] for each filter
             conv_filters:
-              - [16, [3, 3], 3]
-              - [16, [3, 3], 1]
+              - [16, [3, 3], 2]
+              - [32, [3, 3], 2]
             # Nonlinearity for built-in convnet
             conv_activation: relu
             # Nonlinearity for fully connected net (tanh, relu)
             fcnet_activation: tanh
             # Number of hidden layers for fully connected net
-            fcnet_hiddens: [128, 128]
+            fcnet_hiddens: [128]
             # Whether to skip the final linear layer used to resize the hidden layer
             # outputs to size `num_outputs`. If True, then the last hidden layer
             # should already match num_outputs.
@@ -127,9 +127,9 @@ procgen-starter-example:
             # Max seq len for training the LSTM, defaults to 20
             max_seq_len: 20
             # Size of the LSTM cell
-            lstm_cell_size: 256
+            lstm_cell_size: 128
             # Whether to feed a_{t-1}, r_{t-1} to LSTM
-            lstm_use_prev_action_reward: false
+            lstm_use_prev_action_reward: true
             # When using modelv1 models with a modelv2 algorithm, you may have to
             # define the state shape here (e.g., [256, 256]).
             state_shape: null
@@ -186,7 +186,7 @@ procgen-starter-example:
         #
         # The dataflow here can vary per algorithm. For example, PPO further
         # divides the train batch into minibatches for multi-epoch SGD.
-        rollout_fragment_length: 200
+        rollout_fragment_length: 256
 
         # Whether to rollout "complete_episodes" or "truncate_episodes" to
         # `rollout_fragment_length` length unrolls. Episode truncation guarantees
@@ -222,7 +222,7 @@ procgen-starter-example:
         # Training batch size, if applicable. Should be >= rollout_fragment_length.
         # Samples batches will be concatenated together to a batch of this size,
         # which is then passed to SGD.
-        train_batch_size: 200
+        train_batch_size: 256
 
         ################################################
         ################################################

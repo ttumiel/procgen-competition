@@ -5,7 +5,7 @@ set -e
 # Your experiment file for submission   #
 #########################################
 
-export EXPERIMENT_DEFAULT="experiments/impala-baseline.yaml"
+export EXPERIMENT_DEFAULT="experiments/procgen-starter-example.yaml"
 export EXPERIMENT=${EXPERIMENT:-$EXPERIMENT_DEFAULT}
 
 if [[ -z $AICROWD_IS_GRADING ]]; then
@@ -29,13 +29,13 @@ fi
 export VALID_RUN=false
 print_banner() {
 cat << BANNER
-           _____                          _ 
+           _____                          _
      /\   |_   _|                        | |
     /  \    | |  ___ _ __ _____      ____| |
    / /\ \   | | / __| '__/ _ \ \ /\ / / _  |
   / ____ \ _| || (__| | | (_) \ V  V / (_| |
  /_/    \_\_____\___|_|  \___/ \_/\_/ \__,_|
- 
+
 BANNER
 }
 
