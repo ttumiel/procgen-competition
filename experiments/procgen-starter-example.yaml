@@ -21,7 +21,7 @@ procgen-starter-example:
     ################################################
     # === Settings for Checkpoints ===
     ################################################
-    checkpoint_freq: 1
+    checkpoint_freq: 5
     checkpoint_at_end: True
     keep_checkpoints_num: 5
 
@@ -200,7 +200,7 @@ procgen-starter-example:
         ################################################
         ################################################
         # Number of CPUs to allocate per worker.
-        num_cpus_per_worker: 7
+        num_cpus_per_worker: 3
         # Number of GPUs to allocate per worker. This can be fractional. This is
         # usually needed only if your env itself requires a GPU (i.e., it is a
         # GPU-intensive video game), or model inference is unusually expensive.
