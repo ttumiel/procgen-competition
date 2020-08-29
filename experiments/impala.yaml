@@ -1,0 +1,69 @@
+procgen-ppo:
+    env: procgen_env_wrapper  # Change this at your own risk :D
+    run: IMPALA
+    stop:
+        timesteps_total: 8000000
+    checkpoint_freq: 100
+    checkpoint_at_end: True
+    keep_checkpoints_num: 5
+
+    config:
+        # ENV
+        env_config:
+          env_name: coinrun
+          num_levels: 0
+          start_level: 0
+          paint_vel_info: False
+          use_generated_assets: False
+          center_agent: True
+          use_sequential_levels: False
+          distribution_mode: easy
+
+        gamma: 0.99
+        lr: 3.0e-4
+        num_sgd_iter: 3
+        train_batch_size: 1024 #16384 # 256 * 64
+        vf_loss_coeff: 0.5
+        entropy_coeff: 0.01
+        grad_clip: 0.5
+        observation_filter: NoFilter
+        horizon: null
+        soft_horizon: False
+        no_done_at_end: False
+
+        normalize_actions: False
+        clip_rewards: null
+        clip_actions: True
+        preprocessor_pref: deepmind
+
+        ignore_worker_failures: False
+        log_sys_usage: True
+
+        model:
+            custom_model: impala_cnn_tf
+            custom_options:
+                cnn_layers:
+                    - [16, 2]
+                    - [32, 2]
+                    - [32, 2]
+
+        num_workers: 3
+        num_envs_per_worker: 12
+        rollout_fragment_length: 256
+        batch_mode: truncate_episodes
+
+        num_cpus_per_worker: 1
+        num_gpus_per_worker: 0.1
+        num_cpus_for_driver: 1
+
+        num_gpus: 0.3
+
+        explore: True,
+        exploration_config:
+            type: "StochasticSampling"
+
+        observation_filter: "NoFilter"
+        synchronize_filters: True
+        compress_observations: False
+        timesteps_per_iteration: 0
+        seed: null
