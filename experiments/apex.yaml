@@ -41,7 +41,7 @@ procgen-apex:
         hiddens: [512]
 
         # PER
-        buffer_size: 100000
+        buffer_size: 100000        # Increase on the server
         prioritized_replay_alpha: 0.5
         final_prioritized_replay_beta: 1.0
         prioritized_replay_beta: 0.4
@@ -66,12 +66,13 @@ procgen-apex:
                   - [32, 2]
 
         # APEX
-        num_gpus: 1
-        num_workers: 6
-        num_envs_per_worker: 8
+        num_gpus: 0.3
+        num_workers: 3
+        num_gpus_per_worker: 0.2
+        num_envs_per_worker: 4
         # Update the replay buffer with this many samples at once. Note that
         # this setting applies per-worker if num_workers > 1.
-        rollout_fragment_length: 20
+        rollout_fragment_length: 32
         # Size of a batch sampled from replay buffer for training. Note that
         # if async_updates is set, then each worker returns gradients for a
         # batch of this size.
