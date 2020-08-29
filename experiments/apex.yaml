@@ -1,0 +1,80 @@
+procgen-apex:
+    env: procgen_env_wrapper  # Change this at your own risk :D
+    run: APEX
+    stop:
+        timesteps_total: 8000000
+    checkpoint_freq: 100
+    checkpoint_at_end: True
+    keep_checkpoints_num: 5
+
+    config:
+        # ENV
+        env_config:
+          env_name: coinrun
+          num_levels: 0
+          start_level: 0
+          paint_vel_info: False
+          use_generated_assets: False
+          center_agent: True
+          use_sequential_levels: False
+          distribution_mode: easy
+
+        # DQN
+        double_q: true   # Use
+        dueling: true    # Use
+        # Number of atoms for representing the distribution of return. When
+        # this is greater than 1, distributional Q-learning is used.
+        # the discrete supports are bounded by v_min and v_max
+        num_atoms: 1
+        v_min: -10.0
+        v_max: 10.0
+        noisy: false
+
+        # OPTIM
+        n_step: 3
+        lr: .0001
+        adam_epsilon: .00015
+        grad_clip: 40
+        learning_starts: 20000
+
+        # NETWORK
+        hiddens: [512]
+
+        # PER
+        buffer_size: 100000
+        prioritized_replay_alpha: 0.5
+        final_prioritized_replay_beta: 1.0
+        prioritized_replay_beta: 0.4
+        prioritized_replay_beta_annealing_timesteps: 2000000
+
+        # EXPLORATION
+        # TODO: Try other exploration methods (Soft-Q,...)
+        exploration_config:
+          final_epsilon: 0.01
+          epsilon_timesteps: 200000
+
+        # MODEL
+        model:
+          # dim: [64,64]
+          # conv_filters: [16,32,32]
+          custom_model: impala_cnn_tf
+          # Extra options to pass to custom class
+          custom_options:
+              cnn_layers:
+                  - [16, 2]
+                  - [32, 2]
+                  - [32, 2]
+
+        # APEX
+        num_gpus: 1
+        num_workers: 6
+        num_envs_per_worker: 8
+        # Update the replay buffer with this many samples at once. Note that
+        # this setting applies per-worker if num_workers > 1.
+        rollout_fragment_length: 20
+        # Size of a batch sampled from replay buffer for training. Note that
+        # if async_updates is set, then each worker returns gradients for a
+        # batch of this size.
+        train_batch_size: 512
+        target_network_update_freq: 20000
+        timesteps_per_iteration: 10000
