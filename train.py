@@ -137,6 +137,7 @@ def create_parser(parser_creator=None):
             "Whether to queue trials when the cluster does not currently have "
             "enough resources to launch one. This should be set to True when "
             "running on an autoscaling cluster to enable automatic scale-up."))
+    parser.add_argument('--local', action='store_true')
     parser.add_argument(
         "-f",
         "--config-file",
@@ -201,6 +202,13 @@ def run(args, parser):
             if not exp["config"].get("eager"):
                 raise ValueError("Must enable --eager to enable tracing.")
             exp["config"]["eager_tracing"] = True
+
+        if args.local:
+            exp["config"]["num_workers"] = 1
+            exp["config"]["num_envs_per_worker"] = 1
+            exp["config"]["num_cpus_per_worker"] = 1
+            exp["config"]["num_gpus_per_worker"] = 0.1
+            exp["config"]["num_gpus"] = 0.7
 
         ### Add Custom Callbacks
         exp["config"]["callbacks"] = CustomCallbacks
