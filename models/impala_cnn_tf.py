@@ -5,9 +5,9 @@ from ray.rllib.models import ModelCatalog
 tf = try_import_tf()
 
 
-def conv_layer(depth, name):
+def conv_layer(depth, name, st=1):
     return tf.keras.layers.Conv2D(
-        filters=depth, kernel_size=3, strides=1, padding="same", name=name
+        filters=depth, kernel_size=3, strides=st, padding="same", name=name
     )
 
 
@@ -21,9 +21,9 @@ def residual_block(x, depth, prefix):
     return x + inputs
 
 
-def conv_sequence(x, depth, prefix):
-    x = conv_layer(depth, prefix + "_conv")(x)
-    x = tf.keras.layers.MaxPool2D(pool_size=3, strides=2, padding="same")(x)
+def conv_sequence(x, depth, prefix, st=1):
+    x = conv_layer(depth, prefix + "_conv", st=st)(x)
+    # x = tf.keras.layers.MaxPool2D(pool_size=3, strides=2, padding="same")(x)
     x = residual_block(x, depth, prefix=prefix + "_block0")
     x = residual_block(x, depth, prefix=prefix + "_block1")
     return x
@@ -42,16 +42,24 @@ class ImpalaCNN(TFModelV2):
 
         args = model_config['custom_model_config'] # custom_model_config # In ray==0.8.6
 
-        inputs = tf.keras.layers.Input(shape=obs_space.shape, name="observations")
+        self._framestack = args['framestack']
+        if args['framestack']:
+            s,h,w,c=obs_space.shape
+            obs_shape = (h,w,c*s)
+        else:
+            obs_shape=obs_space.shape
+
+        # obs_space.shape
+        inputs = tf.keras.layers.Input(shape=obs_shape, name="observations")
         scaled_inputs = tf.cast(inputs, tf.float32) / 255.0
 
         x = scaled_inputs
-        for i, depth in enumerate(depths):
-            x = conv_sequence(x, depth, prefix=f"seq{i}")
+        for i, (channels, stride) in enumerate(args['cnn_layers']):
+            x = conv_sequence(x, channels, prefix=f"seq{i}", st=stride)
 
         x = tf.keras.layers.Flatten()(x)
         x = tf.keras.layers.ReLU()(x)
-        x = tf.keras.layers.Dense(units=256, activation="relu", name="hidden")(x)
+        x = tf.keras.layers.Dense(units=128, activation="relu", name="hidden")(x)
         logits = tf.keras.layers.Dense(units=num_outputs, name="pi")(x)
         value = tf.keras.layers.Dense(units=1, name="vf")(x)
         self.base_model = tf.keras.Model(inputs, [logits, value])
@@ -60,6 +68,13 @@ class ImpalaCNN(TFModelV2):
     def forward(self, input_dict, state, seq_lens):
         # explicit cast to float32 needed in eager
         obs = tf.cast(input_dict["obs"], tf.float32)
+
+        if self._framestack:
+            # Framestack
+            b,s,h,w,c = obs.shape
+            obs = tf.keras.layers.Permute((2,3,1,4))(obs)
+            obs = tf.keras.layers.Reshape((h,w,c*s))(obs)
+
         logits, self._value = self.base_model(obs)
         return logits, state
 
