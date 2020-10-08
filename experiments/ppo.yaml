@@ -1,0 +1,88 @@
+procgen-starter-example:
+    env: stacked_procgen_env
+    run: PPO
+    stop:
+        timesteps_total: 8000000
+    checkpoint_freq: 5
+    checkpoint_at_end: True
+    keep_checkpoints_num: 5
+
+    config:
+        env_config:
+            env_name: coinrun
+            num_levels: 0
+            start_level: 0
+            paint_vel_info: False
+            use_generated_assets: False
+            center_agent: True
+            use_sequential_levels: False
+            distribution_mode: easy
+
+        gamma: 0.99
+        lr: 5.0e-4
+        kl_coeff: 0.2
+        kl_target: 0.01
+        lambda: 0.9
+        horizon: null
+        soft_horizon: False
+        no_done_at_end: False
+
+        rollout_fragment_length: 256
+        train_batch_size: 4096
+        sgd_minibatch_size: 1024
+        num_sgd_iter: 2
+        batch_mode: truncate_episodes
+
+        # vf_loss_coeff: 0.5
+        entropy_coeff: 0.01
+        clip_param: 0.2
+        # vf_clip_param: 0.2
+
+        normalize_actions: False
+        clip_rewards: null
+        clip_actions: True
+        preprocessor_pref: deepmind
+
+        ignore_worker_failures: False
+        log_sys_usage: True
+
+        model:
+            conv_filters:
+              - [16, [3, 3], 2]
+              - [32, [3, 3], 2]
+            conv_activation: relu
+            fcnet_activation: tanh
+            fcnet_hiddens: [128]
+            no_final_linear: false
+            vf_share_layers: true
+
+            use_lstm: false
+            max_seq_len: 20
+            lstm_cell_size: 128
+            lstm_use_prev_action_reward: true
+            state_shape: null
+
+            custom_model: impala_cnn_tf
+            custom_model_config:
+                framestack: True
+                cnn_layers:
+                    - [16, 2]
+                    - [32, 2]
+                    - [32, 2]
+
+        num_workers: 6
+        num_envs_per_worker: 4
+        num_cpus_per_worker: 1
+        num_gpus_per_worker: 0.1
+        num_cpus_for_driver: 1
+        num_gpus: 0.3
+
+        explore: True,
+        exploration_config:
+            type: "StochasticSampling"
+
+        observation_filter: "NoFilter"
+        synchronize_filters: True
+        compress_observations: False
+        timesteps_per_iteration: 0
+        seed: null
