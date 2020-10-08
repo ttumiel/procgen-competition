@@ -36,7 +36,7 @@ procgen-apex:
         lr: 1.0e-4      # 1.0e-4 PBT: "tune.sample_from(lambda s: random.uniform(5e-5, 1e-3))"
         adam_epsilon: 0.00015
         grad_clip: 40
-        learning_starts: 20000
+        learning_starts: 50000
 
         # NETWORK
         hiddens: [512]
