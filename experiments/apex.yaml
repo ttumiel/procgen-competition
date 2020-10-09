@@ -70,7 +70,7 @@ procgen-apex:
 
         # APEX
         num_gpus: 0.5
-        num_workers: 8
+        num_workers: 6
         num_gpus_per_worker: 0.05
         num_envs_per_worker: 4
 
