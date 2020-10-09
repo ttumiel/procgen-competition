@@ -70,7 +70,7 @@ procgen-starter-example:
                     - [32, 2]
                     - [32, 2]
 
-        num_workers: 6
+        num_workers: 4
         num_envs_per_worker: 4
         num_cpus_per_worker: 1
         num_gpus_per_worker: 0.1
