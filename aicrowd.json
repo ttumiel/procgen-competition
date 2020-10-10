@@ -3,6 +3,6 @@
     "grader_id": "evaluations-api-neurips-2020-procgen",
     "authors": ["Thomas Tumiel (ttom)"],
     "description": "Procgen test submission",
-    "docker_build": false,
-    "debug": true
+    "docker_build": true,
+    "debug": false
 }
