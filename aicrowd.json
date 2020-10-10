@@ -1,8 +1,8 @@
 {
-    "challenge_id" : "evaluations-api-neurips-2020-procgen",
+    "challenge_id": "evaluations-api-neurips-2020-procgen",
     "grader_id": "evaluations-api-neurips-2020-procgen",
-    "authors" : ["Thomas Tumiel (ttom)"],
+    "authors": ["Thomas Tumiel (ttom)"],
     "description": "Procgen test submission",
     "docker_build": false,
-    "debug" : false
+    "debug": true
 }
