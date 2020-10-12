@@ -1,5 +1,5 @@
 procgen-starter-example:
-    env: stacked_procgen_env
+    env: procgen_env_wrapper
     run: PPO
     stop:
         timesteps_total: 8000000
@@ -29,7 +29,7 @@ procgen-starter-example:
 
         rollout_fragment_length: 256
         train_batch_size: 16384
-        sgd_minibatch_size: 2048
+        sgd_minibatch_size: 4096
         num_sgd_iter: 2
         batch_mode: truncate_episodes
 
@@ -57,15 +57,14 @@ procgen-starter-example:
             no_final_linear: false
             vf_share_layers: true
 
-            use_lstm: false
-            max_seq_len: 20
-            lstm_cell_size: 128
-            lstm_use_prev_action_reward: true
-            state_shape: null
+            # use_lstm: false
+            # max_seq_len: 20
+            # lstm_cell_size: 128
+            # lstm_use_prev_action_reward: true
 
             custom_model: impala_cnn_tf
             custom_model_config:
-                framestack: True
+                framestack: False
 
         num_workers: 6
         num_envs_per_worker: 4
