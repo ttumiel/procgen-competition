@@ -40,13 +40,14 @@ procgen-ppo:
         log_sys_usage: True
 
         model:
+            conv_filters:
+                - [16, 2]
+                - [32, 2]
+                - [32, 2]
+
             custom_model: impala_cnn_tf
             custom_model_config: # custom_model_config
                 framestack: True
-                cnn_layers:
-                    - [16, 2]
-                    - [32, 2]
-                    - [32, 2]
 
         num_workers: 3
         num_envs_per_worker: 12

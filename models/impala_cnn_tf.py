@@ -2,7 +2,7 @@ from ray.rllib.models.tf.tf_modelv2 import TFModelV2
 from ray.rllib.utils.framework import try_import_tf
 from ray.rllib.models import ModelCatalog
 
-tf = try_import_tf()
+tf1, tf, tfv = try_import_tf()
 
 
 def conv_layer(depth, name, st=1):
@@ -37,12 +37,12 @@ class ImpalaCNN(TFModelV2):
     and https://github.com/openai/baselines/blob/9ee399f5b20cd70ac0a871927a6cf043b478193f/baselines/common/models.py#L28
     """
 
-    def __init__(self, obs_space, action_space, num_outputs, model_config, name):
+    def __init__(self, obs_space, action_space, num_outputs, model_config, name, **kwargs):
         super().__init__(obs_space, action_space, num_outputs, model_config, name)
 
         args = model_config['custom_model_config'] # custom_model_config # In ray==0.8.6
 
-        self._framestack = args['framestack']
+        self._framestack = kwargs['framestack']
         if args['framestack']:
             s,h,w,c=obs_space.shape
             obs_shape = (h,w,c*s)
@@ -54,7 +54,7 @@ class ImpalaCNN(TFModelV2):
         scaled_inputs = tf.cast(inputs, tf.float32) / 255.0
 
         x = scaled_inputs
-        for i, (channels, stride) in enumerate(args['cnn_layers']):
+        for i, (channels, stride) in enumerate(model_config['conv_filters']):
             x = conv_sequence(x, channels, prefix=f"seq{i}", st=stride)
 
         x = tf.keras.layers.Flatten()(x)

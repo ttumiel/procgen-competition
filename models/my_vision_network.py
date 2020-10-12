@@ -1,14 +1,14 @@
 from ray.rllib.models.tf.tf_modelv2 import TFModelV2
-from ray.rllib.models.tf.visionnet_v1 import _get_filter_config
 from ray.rllib.models.tf.misc import normc_initializer
-from ray.rllib.utils.framework import try_import_tf
+from ray.rllib.models.utils import get_filter_config
+from ray.rllib.utils.framework import get_activation_fn, try_import_tf
 
 from ray.rllib.models import ModelCatalog
 
-tf = try_import_tf()
+tf1, tf, tfv = try_import_tf()
 
 """
-NOTE : This implementation has been taken from : 
+NOTE : This implementation has been taken from :
     https://github.com/ray-project/ray/blob/master/rllib/models/tf/visionnet_v2.py
 
     to act as a reference implementation for implementing custom models.
@@ -33,7 +33,7 @@ def get_fc_activation(model_config):
 def conv_layers(x, model_config, obs_space, prefix=""):
     filters = model_config.get("conv_filters")
     if not filters:
-        filters = _get_filter_config(obs_space.shape)
+        filters = get_filter_config(obs_space.shape)
 
     activation = get_conv_activation(model_config)
 

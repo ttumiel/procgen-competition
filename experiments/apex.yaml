@@ -59,14 +59,14 @@ procgen-apex:
         model:
           # dim: [64,64]
           # conv_filters: [16,32,32]
+            conv_filters:
+                - [16, 2]
+                - [32, 2]
+                - [32, 2]
           custom_model: impala_cnn_tf
           # Extra options to pass to custom class
           custom_model_config: #custom_options,custom_model_config
               framestack: True
-              cnn_layers:
-                  - [16, 2]
-                  - [32, 2]
-                  - [32, 2]
 
         # APEX
         num_gpus: 0.5

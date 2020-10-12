@@ -48,8 +48,9 @@ procgen-starter-example:
 
         model:
             conv_filters:
-              - [16, [3, 3], 2]
-              - [32, [3, 3], 2]
+                - [16, 2]
+                - [32, 2]
+                - [32, 2]
             conv_activation: relu
             fcnet_activation: tanh
             fcnet_hiddens: [128]
@@ -65,10 +66,6 @@ procgen-starter-example:
             custom_model: impala_cnn_tf
             custom_model_config:
                 framestack: True
-                cnn_layers:
-                    - [16, 2]
-                    - [32, 2]
-                    - [32, 2]
 
         num_workers: 6
         num_envs_per_worker: 4

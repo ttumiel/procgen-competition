@@ -17,7 +17,7 @@ from utils.loader import load_envs, load_models, load_algorithms, load_preproces
 from callbacks import CustomCallbacks
 
 # Try to import both backends for flag checking/warnings.
-tf = try_import_tf()
+tf1, tf, tfv = try_import_tf()
 torch, _ = try_import_torch()
 
 """
@@ -220,15 +220,15 @@ def run(args, parser):
                 num_cpus=args.ray_num_cpus or 1,
                 num_gpus=args.ray_num_gpus or 0,
                 object_store_memory=args.ray_object_store_memory,
-                memory=args.ray_memory,
-                redis_max_memory=args.ray_redis_max_memory)
+                _memory=args.ray_memory,
+                _redis_max_memory=args.ray_redis_max_memory)
         ray.init(address=cluster.address)
     else:
         ray.init(
             address=args.ray_address,
             object_store_memory=args.ray_object_store_memory,
-            memory=args.ray_memory,
-            redis_max_memory=args.ray_redis_max_memory,
+            _memory=args.ray_memory,
+            _redis_max_memory=args.ray_redis_max_memory,
             num_cpus=args.ray_num_cpus,
             num_gpus=args.ray_num_gpus)
     run_experiments(
