@@ -37,12 +37,12 @@ class ImpalaCNN(TFModelV2):
     and https://github.com/openai/baselines/blob/9ee399f5b20cd70ac0a871927a6cf043b478193f/baselines/common/models.py#L28
     """
 
-    def __init__(self, obs_space, action_space, num_outputs, model_config, name, **kwargs):
+    def __init__(self, obs_space, action_space, num_outputs, model_config, name):
         super().__init__(obs_space, action_space, num_outputs, model_config, name)
 
-        args = model_config['custom_model_config'] # custom_model_config # In ray==0.8.6
+        args = model_config['custom_model_config']
 
-        self._framestack = kwargs['framestack']
+        self._framestack = args['framestack']
         if args['framestack']:
             s,h,w,c=obs_space.shape
             obs_shape = (h,w,c*s)
