@@ -2,7 +2,7 @@ from ray.rllib.models.tf.tf_modelv2 import TFModelV2
 from ray.rllib.utils.framework import try_import_tf
 from ray.rllib.models import ModelCatalog
 
-tf1, tf, tfv = try_import_tf()
+tf = try_import_tf()
 
 
 def conv_layer(depth, name, st=1):
@@ -37,7 +37,7 @@ class ImpalaCNN(TFModelV2):
     and https://github.com/openai/baselines/blob/9ee399f5b20cd70ac0a871927a6cf043b478193f/baselines/common/models.py#L28
     """
 
-    def __init__(self, obs_space, action_space, num_outputs, model_config, name):
+    def __init__(self, obs_space, action_space, num_outputs, model_config, name, **kwargs):
         super().__init__(obs_space, action_space, num_outputs, model_config, name)
 
         args = model_config['custom_model_config']
@@ -68,6 +68,7 @@ class ImpalaCNN(TFModelV2):
     def forward(self, input_dict, state, seq_lens):
         # explicit cast to float32 needed in eager
         obs = tf.cast(input_dict["obs"], tf.float32)
+        obs = (obs-128.)/255.
 
         if self._framestack:
             # Framestack

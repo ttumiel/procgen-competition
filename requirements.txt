@@ -1,4 +1,4 @@
-ray[rllib]==1.0.0
+ray[rllib]==0.8.7
 procgen==0.10.1
 tensorflow==2.1.0
 mlflow==1.8.0
