@@ -148,6 +148,19 @@ def create_parser(parser_creator=None):
     return parser
 
 
+# Monkey-patch ray init to v1 args
+_ray_init = ray.init
+def ray_v1_init(*args, **kwargs):
+    if 'memory' in kwargs:
+        m = kwargs.pop('memory')
+        kwargs['_memory'] = m
+    if 'redis_max_memory' in kwargs:
+        m = kwargs.pop('redis_max_memory')
+        kwargs['_redis_max_memory'] = m
+    _ray_init(*args, **kwargs)
+ray.init = ray_v1_init
+
+
 def run(args, parser):
     if args.config_file:
         with open(args.config_file) as f:
