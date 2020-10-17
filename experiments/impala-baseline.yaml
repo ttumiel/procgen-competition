@@ -122,11 +122,6 @@ procgen-ppo:
         # Note : The AIcrowd Evaluators will always override this to be True
         log_sys_usage: True
 
-        # Use PyTorch (instead of tf). If using `rllib train`, this can also be
-        # enabled with the `--torch` flag.
-        # NOTE: Some agents may not support `torch` yet and throw an error.
-        use_pytorch: False
-
         ################################################
         ################################################
         # === Settings for Model ===
@@ -188,8 +183,13 @@ procgen-ppo:
             # here :
             # https://github.com/ray-project/ray/blob/master/rllib/examples/custom_keras_model.py
             custom_model: impala_cnn_tf
+            conv_filters:
+                - [16, 2]
+                - [32, 2]
+                - [32, 2]
             # Extra options to pass to custom class
-            custom_options: {}
+            custom_model_config:
+                framestack: False
 
         ################################################
         ################################################
