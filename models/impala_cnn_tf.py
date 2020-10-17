@@ -51,9 +51,14 @@ class ImpalaCNN(TFModelV2):
 
         # obs_space.shape
         inputs = tf.keras.layers.Input(shape=obs_shape, name="observations")
-        scaled_inputs = tf.cast(inputs, tf.float32) / 255.0
-
+        scaled_inputs = (tf.cast(inputs, tf.float32) - 128.0) / 255.0
         x = scaled_inputs
+
+        if self._framestack:
+            # Framestack
+            x = tf.keras.layers.Permute((2,3,1,4))(x)
+            x = tf.keras.layers.Reshape(obs_shape)(x)
+
         for i, (channels, stride) in enumerate(model_config['conv_filters']):
             x = conv_sequence(x, channels, prefix=f"seq{i}", st=stride)
 
@@ -68,13 +73,6 @@ class ImpalaCNN(TFModelV2):
     def forward(self, input_dict, state, seq_lens):
         # explicit cast to float32 needed in eager
         obs = tf.cast(input_dict["obs"], tf.float32)
-        obs = (obs-128.)/255.
-
-        if self._framestack:
-            # Framestack
-            b,s,h,w,c = obs.shape
-            obs = tf.keras.layers.Permute((2,3,1,4))(obs)
-            obs = tf.keras.layers.Reshape((h,w,c*s))(obs)
 
         logits, self._value = self.base_model(obs)
         return logits, state
