@@ -28,7 +28,7 @@ procgen-starter-example:
         no_done_at_end: False
 
         rollout_fragment_length: 256
-        train_batch_size: 8192
+        train_batch_size: 4096
         sgd_minibatch_size: 1024 # 4096
         num_sgd_iter: 2
         batch_mode: truncate_episodes
