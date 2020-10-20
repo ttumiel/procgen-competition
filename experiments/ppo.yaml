@@ -1,4 +1,4 @@
-procgen-starter-example:
+procgen-ppo:
     env: procgen_env_wrapper
     run: PPO
     stop:
@@ -8,6 +8,8 @@ procgen-starter-example:
     keep_checkpoints_num: 5
 
     config:
+        use_pytorch: false
+
         env_config:
             env_name: coinrun
             num_levels: 0
@@ -63,7 +65,7 @@ procgen-starter-example:
             # lstm_use_prev_action_reward: true
 
             custom_model: impala_cnn_tf
-            custom_model_config:
+            custom_options:
                 framestack: False
 
         num_workers: 6
@@ -73,7 +75,7 @@ procgen-starter-example:
         num_cpus_for_driver: 1
         num_gpus: 0.3
 
-        explore: True,
+        explore: True
         exploration_config:
             type: "StochasticSampling"
 

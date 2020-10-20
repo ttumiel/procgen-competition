@@ -1,5 +1,5 @@
-procgen-ppo:
-    env: procgen_env_wrapper  # Change this at your own risk :D
+procgen-impala:
+    env: stacked_procgen_env  # Change this at your own risk :D
     run: IMPALA
     stop:
         timesteps_total: 8000000
@@ -8,6 +8,8 @@ procgen-ppo:
     keep_checkpoints_num: 5
 
     config:
+        use_pytorch: false
+
         # ENV
         env_config:
           env_name: coinrun
@@ -46,19 +48,19 @@ procgen-ppo:
                 - [32, 2]
 
             custom_model: impala_cnn_tf
-            custom_model_config: # custom_model_config
+            custom_options: # custom_model_config
                 framestack: True
 
-        num_workers: 3
+        num_workers: 6
         num_envs_per_worker: 12
         rollout_fragment_length: 256
         batch_mode: truncate_episodes
 
         num_cpus_per_worker: 1
-        num_gpus_per_worker: 0.1
+        num_gpus_per_worker: 0.05
         num_cpus_for_driver: 1
 
-        num_gpus: 0.5
+        num_gpus: 0.6
 
         explore: True,
         exploration_config:

@@ -9,6 +9,8 @@ procgen-apex:
     # num_samples: 3
 
     config:
+        use_pytorch: false
+
         # ENV
         env_config:
             env_name: coinrun
@@ -43,7 +45,7 @@ procgen-apex:
 
         # PER
         buffer_size: 200000        # Increase on the server
-        # compress_observations: True
+        compress_observations: True
         prioritized_replay_alpha: 0.5
         final_prioritized_replay_beta: 1.0
         prioritized_replay_beta: 0.4
@@ -65,7 +67,7 @@ procgen-apex:
                 - [32, 2]
             custom_model: impala_cnn_tf
             # Extra options to pass to custom class
-            custom_model_config: #custom_options,custom_model_config
+            custom_options: #custom_options,custom_model_config
                 framestack: True
 
         # APEX
