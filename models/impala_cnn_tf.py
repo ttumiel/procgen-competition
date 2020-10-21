@@ -23,7 +23,7 @@ def residual_block(x, depth, prefix):
 
 def conv_sequence(x, depth, prefix, st=1):
     x = conv_layer(depth, prefix + "_conv", st=st)(x)
-    # x = tf.keras.layers.MaxPool2D(pool_size=3, strides=2, padding="same")(x)
+    x = tf.keras.layers.MaxPool2D(pool_size=3, strides=2, padding="same")(x)
     x = residual_block(x, depth, prefix=prefix + "_block0")
     x = residual_block(x, depth, prefix=prefix + "_block1")
     return x
@@ -64,7 +64,7 @@ class ImpalaCNN(TFModelV2):
 
         x = tf.keras.layers.Flatten()(x)
         x = tf.keras.layers.ReLU()(x)
-        x = tf.keras.layers.Dense(units=128, activation="relu", name="hidden")(x)
+        x = tf.keras.layers.Dense(units=256, activation="relu", name="hidden")(x)
         logits = tf.keras.layers.Dense(units=num_outputs, name="pi")(x)
         value = tf.keras.layers.Dense(units=1, name="vf")(x)
         self.base_model = tf.keras.Model(inputs, [logits, value])
