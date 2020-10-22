@@ -22,10 +22,15 @@ procgen-impala:
           distribution_mode: easy
 
         gamma: 0.99
-        lr: 3.0e-4
-        num_sgd_iter: 3
-        train_batch_size: 4096 #16384 # 256 * 64
-        vf_loss_coeff: 0.5
+        # lr: 3.0e-4 #"tune.sample_from(lambda spec: random.uniform(1e-4, 1e-3))" # 3.0e-4
+        lr_schedule: [
+            [0, 1.0e-4],
+            [1000000, 5.0e-4],
+            [8000000, 1.0e-4],
+        ]
+        num_sgd_iter: 3         #"tune.sample_from(lambda spec: random.randint(1,10))" # 3; 10 # reduce for faster training?
+        train_batch_size: 4096  #"tune.sample_from([1024])" #1024 #4096 #16384 # 256 * 64
+        vf_loss_coeff: 0.5      #"tune.sample_from([0.5])" #0.5
         entropy_coeff: 0.01
         grad_clip: 0.5
         observation_filter: NoFilter
