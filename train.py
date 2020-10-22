@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
 import argparse
-import os
+import os, random
 from pathlib import Path
-import yaml
+import yaml, time
+import numpy as np
 
 import ray
+from ray import tune
 from ray.cluster_utils import Cluster
 from ray.tune.config_parser import make_parser
 from ray.tune.result import DEFAULT_RESULTS_DIR
@@ -14,10 +16,12 @@ from ray.tune.tune import _make_scheduler, run_experiments
 from ray.rllib.utils.framework import try_import_tf, try_import_torch
 
 from utils.loader import load_envs, load_models, load_algorithms, load_preprocessors
-from callbacks import CustomCallbacks
+from callbacks import CustomCallbacks, TestCallback, AugmentObservations, RewardClip
+from schedulers import get_pbt
+from transforms import get_tfms
 
 # Try to import both backends for flag checking/warnings.
-tf1, tf, tfv = try_import_tf()
+tf = try_import_tf()
 torch, _ = try_import_torch()
 
 """
@@ -31,6 +35,7 @@ Training example:
 
 Training with Config:
     python ./train.py -f experiments/simple-corridor-0.yaml
+    python ./train.py -f experiments/procgen-starter-example.yaml
 
 
 Note that -f overrides all other trial-specific command-line options.
@@ -233,7 +238,7 @@ def run(args, parser):
             num_gpus=args.ray_num_gpus)
     run_experiments(
         experiments,
-        scheduler=_make_scheduler(args),
+        scheduler=None,
         queue_trials=args.queue_trials,
         resume=args.resume,
         verbose=verbose,
