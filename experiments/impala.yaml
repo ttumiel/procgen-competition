@@ -21,7 +21,7 @@ procgen-impala:
           use_sequential_levels: False
           distribution_mode: easy
 
-        gamma: 0.99
+        gamma: 0.995
         # lr: 3.0e-4 #"tune.sample_from(lambda spec: random.uniform(1e-4, 1e-3))" # 3.0e-4
         lr_schedule: [
             [0, 1.0e-4],
@@ -56,12 +56,13 @@ procgen-impala:
             custom_options: # custom_model_config
                 framestack: False
 
+        num_workers: 6
         num_envs_per_worker: 4
-        rollout_fragment_length: 256
+        rollout_fragment_length: 200
         batch_mode: truncate_episodes
 
         num_cpus_per_worker: 1
-        num_gpus_per_worker: 0.1
+        num_gpus_per_worker: 0.05
         num_cpus_for_driver: 1
 
         num_gpus: 0.6
