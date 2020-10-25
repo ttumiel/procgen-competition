@@ -56,8 +56,8 @@ procgen-impala:
             custom_options: # custom_model_config
                 framestack: False
 
-        num_workers: 6
-        num_envs_per_worker: 4
+        num_workers: 3
+        num_envs_per_worker: 12
         rollout_fragment_length: 200
         batch_mode: truncate_episodes
 
