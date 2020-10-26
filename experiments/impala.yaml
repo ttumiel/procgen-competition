@@ -52,9 +52,12 @@ procgen-impala:
                 - [32, 1]
                 - [32, 1]
 
+            custom_model: impala_cnn_tf
+            custom_options: # custom_model_config
                 framestack: true
 
         num_workers: 2
+        num_envs_per_worker: 6
         rollout_fragment_length: 200
         batch_mode: truncate_episodes
 
