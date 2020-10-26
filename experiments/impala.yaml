@@ -1,5 +1,5 @@
 procgen-impala:
-    env: procgen_env_wrapper  # Change this at your own risk :D
+    env: gap_stacked_procgen_env  # Change this at your own risk :D
     run: IMPALA
     stop:
         timesteps_total: 8000000
@@ -52,12 +52,9 @@ procgen-impala:
                 - [32, 1]
                 - [32, 1]
 
-            custom_model: impala_cnn_tf
-            custom_options: # custom_model_config
-                framestack: False
+                framestack: true
 
-        num_workers: 3
-        num_envs_per_worker: 12
+        num_workers: 2
         rollout_fragment_length: 200
         batch_mode: truncate_episodes
 
