@@ -57,7 +57,7 @@ procgen-impala:
                 framestack: true
 
         num_workers: 2
-        num_envs_per_worker: 6
+        num_envs_per_worker: 8
         rollout_fragment_length: 200
         batch_mode: truncate_episodes
 
