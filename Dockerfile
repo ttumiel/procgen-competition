@@ -59,5 +59,4 @@ RUN wget -nv -O miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-py37
 
 ENV PATH ${CONDA_DIR}/bin:${PATH}
 
-RUN pip install -r requirements.txt --no-cache-dir -f https://download.pytorch.org/whl/torch_stable.html
-RUN python -c "import torchvision.models as m; [f(pretrained=True) for f in [m.resnet34, m.resnet18, m.resnet50]]"
+RUN pip install -r requirements.txt --no-cache-dir
