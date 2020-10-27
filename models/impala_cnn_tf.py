@@ -89,15 +89,13 @@ class ImpalaCNN(TFModelV2):
         if args['framestack']:
             s,h,w,c = obs_space.shape
             obs_shape = (h,w,c*s)
-
-        if self.f:
             self.frames = tf.keras.Sequential([
                 tf.keras.layers.Permute((2,3,1,4)),
                 tf.keras.layers.Reshape(obs_shape)
             ])
 
         body = ImpalaBase(1)
-        inputs = tf.keras.layers.Input(shape=obs_space.shape, name="observations")
+        inputs = tf.keras.layers.Input(shape=obs_shape, name="observations")
         x = body(inputs)
         logits = tf.keras.layers.Dense(units=num_outputs, name="pi",)(x)
                     # kernel_initializer=tf.keras.initializers.he_normal())(x)
