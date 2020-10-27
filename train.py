@@ -21,7 +21,7 @@ from schedulers import get_pbt
 from transforms import get_tfms
 
 # Try to import both backends for flag checking/warnings.
-tf = try_import_tf()
+tf1,tf,tfv = try_import_tf() # tf1, tf, tfv = try_import_tf()
 torch, _ = try_import_torch()
 
 """

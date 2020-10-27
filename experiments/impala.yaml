@@ -53,8 +53,9 @@ procgen-impala:
                 - [32, 1]
 
             custom_model: impala_cnn_tf
-            custom_options: # custom_model_config
+            custom_model_config:
                 framestack: true
+                augment: false
 
         num_workers: 2
         num_envs_per_worker: 8
