@@ -209,11 +209,18 @@ def run(args, parser):
             exp["config"]["eager_tracing"] = True
 
         if args.local:
+            print("Training locally")
             exp["config"]["num_workers"] = 1
             exp["config"]["num_envs_per_worker"] = 1
             exp["config"]["num_cpus_per_worker"] = 1
             exp["config"]["num_gpus_per_worker"] = 0.1
             exp["config"]["num_gpus"] = 0.7
+            if exp['config']['train_batch_size'] > 512:
+                exp['config']['train_batch_size'] = 512
+            if 'sgd_minibatch_size' in exp['config']:
+                exp['config']['sgd_minibatch_size'] = 256
+            if 'buffer_size' in exp['config']:
+                exp['config']['buffer_size'] = 20000
 
         ### Add Custom Callbacks
         exp["config"]["callbacks"] = CustomCallbacks
