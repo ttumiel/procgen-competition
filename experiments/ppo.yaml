@@ -67,7 +67,7 @@ procgen-ppo:
                 - [16, 1]
                 - [32, 1]
                 - [32, 1]
-            custom_model: impala_cnn_tf
+            custom_model: xresnet_tf
             custom_model_config:
                 framestack: false
                 augment: false
