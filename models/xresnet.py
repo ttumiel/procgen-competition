@@ -26,17 +26,13 @@ class XResBlock(tf.keras.layers.Layer):
             conv(self.d, st=self.st, act=self.act, name="_conv0"),
             conv(self.d, act=None, name="_conv1", gamma_init='zeros')
         ])
-        self.pool = tf.keras.layers.AveragePooling2D(self.st, self.st) if self.st>1 else None
-        self.shortcut = conv(self.d, k=1, act=None) if self.cin!=self.d else None
+        short = []
+        if self.st>1: short.append(tf.keras.layers.AveragePooling2D(self.st, self.st))
+        if self.cin!=self.d: short.append(conv(self.d, k=1, act=None))
+        self.shortcut = tf.keras.Sequential(short)
 
     def call(self,x, training=None):
-        inp = x
-        x=self.conv(x, training=training)
-        if self.st>1:
-            inp = self.pool(inp)
-        if self.d!=self.cin:
-            inp = self.shortcut(inp, training=training)
-        return self.act()(x + inp)
+        return self.act()(self.shortcut(x, training=training) + self.conv(x, training=training))
 
 
 class XResNetBase(tf.keras.Model):
