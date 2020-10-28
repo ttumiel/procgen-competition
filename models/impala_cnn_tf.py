@@ -44,7 +44,7 @@ class ImpalaBase(tf.keras.Model):
 
         self.features = tf.keras.Sequential([
             ConvSequence(channels*self.m, f"seq{i}", st=stride)
-            for i,(channels,stride) in enumerate([[16,1],[32,1],[32,1]])
+            for i,(channels,stride) in enumerate([[32,1],[64,1],[64,1]])
         ])
 
         self.head = tf.keras.Sequential([
