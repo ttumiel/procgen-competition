@@ -33,8 +33,8 @@ procgen-ppo:
             [1000000, 1.0e-4],
             [2000000, 6.0e-4],
             [3000000, 5.0e-5],
-            [4000000, 3.0e-4],
-            [8000000, 3.0e-5],
+            [4000000, 1.0e-4],
+            [8000000, 2.0e-5],
           ]
         kl_coeff: 0.2
         kl_target: 0.01
@@ -67,7 +67,7 @@ procgen-ppo:
                 - [16, 1]
                 - [32, 1]
                 - [32, 1]
-            custom_model: xresnet_tf
+            custom_model: impala_cnn_tf
             custom_model_config:
                 framestack: false
                 augment: false
