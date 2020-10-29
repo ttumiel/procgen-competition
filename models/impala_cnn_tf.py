@@ -38,8 +38,8 @@ class ConvSequence(tf.keras.Sequential):
 
 
 class ImpalaBase(tf.keras.Model):
-    def __init__(self, multiplier, hidden_act='relu'):
-        super().__init__(name="body")
+    def __init__(self, multiplier, hidden_act='relu', name='body'):
+        super().__init__(name=name)
         self.m=multiplier
 
         self.features = tf.keras.Sequential([
@@ -57,7 +57,7 @@ class ImpalaBase(tf.keras.Model):
     def call(self, inputs, training=None):
         x = (tf.cast(inputs, tf.float32) - 128.0) / 255.0
         x = self.features(x)
-        return self.head(x)
+        return self.head(x, training=training)
 
 class Augment(tf.keras.layers.Layer):
     # Make sure latest tf is installed.
@@ -101,6 +101,7 @@ class ImpalaCNN(TFModelV2):
                     # kernel_initializer=tf.keras.initializers.he_normal())(x)
         value = tf.keras.layers.Dense(units=1, name="vf",)(x)
                     # kernel_initializer=tf.keras.initializers.he_normal())(x)
+
         self.base_model = tf.keras.Model(inputs, [logits, value])
         self.register_variables(self.base_model.variables)
         self.base_model.summary()
@@ -116,7 +117,7 @@ class ImpalaCNN(TFModelV2):
         if self.a:
             obs = Augment()(obs, training=input_dict['is_training'])
 
-        logits, self._value = self.base_model(obs, training=input_dict['is_training'])
+        logits, self._value  = self.base_model(obs, training=input_dict['is_training'])
         return logits, state
 
     def value_function(self):
