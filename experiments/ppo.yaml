@@ -1,6 +1,7 @@
 procgen-ppo:
     env: procgen_env_wrapper
-    run: PPO
+    # stacked_procgen_env,procgen_env_wrapper
+    run: PPO_RND
     stop:
         timesteps_total: 8000000
     checkpoint_freq: 100
@@ -31,7 +32,7 @@ procgen-ppo:
             [0,       1.0e-4],
             [500000,  8.0e-4],
             [1000000, 1.0e-4],
-            [2000000, 6.0e-4],
+            [2000000, 4.0e-4],
             [3000000, 5.0e-5],
             [4000000, 1.0e-4],
             [8000000, 2.0e-5],
@@ -67,7 +68,7 @@ procgen-ppo:
                 - [16, 1]
                 - [32, 1]
                 - [32, 1]
-            custom_model: impala_cnn_tf
+            custom_model: impala_cnn_tf_rnd
             custom_model_config:
                 framestack: false
                 augment: false
