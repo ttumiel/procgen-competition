@@ -5,9 +5,9 @@ from ray.rllib.models import ModelCatalog
 tf1,tf,tfv = try_import_tf()
 
 
-def conv_layer(depth, name, st=1):
+def conv_layer(depth, name, st=1, act=None):
     return tf.keras.layers.Conv2D(
-        filters=depth, kernel_size=3, strides=st, padding="same", name=name,
+        filters=depth, kernel_size=3, strides=st, padding="same", name=name, activation=act,
         kernel_regularizer=tf.keras.regularizers.L2(0.001)
         # kernel_initializer=tf.keras.initializers.he_normal()
     )
@@ -45,7 +45,7 @@ class ImpalaBase(tf.keras.Model):
 
         self.features = tf.keras.Sequential([
             ConvSequence(channels*self.m, f"seq{i}", st=stride)
-            for i,(channels,stride) in enumerate([[32,1],[64,1],[64,1]])
+            for i,(channels,stride) in enumerate([[16,1],[32,1],[32,1]])
         ])
 
         self.head = tf.keras.Sequential([
@@ -95,7 +95,7 @@ class ImpalaCNN(TFModelV2):
                 tf.keras.layers.Reshape(obs_shape)
             ])
 
-        body = ImpalaBase(1)
+        body = ImpalaBase(2)
         inputs = tf.keras.layers.Input(shape=obs_shape, name="observations")
         x = body(inputs)
         logits = tf.keras.layers.Dense(units=num_outputs, name="pi",)(x)

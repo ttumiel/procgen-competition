@@ -6,6 +6,7 @@ import numpy as np
 from envs.procgen_env_wrapper import ProcgenEnvWrapper
 
 class FrameGapStack(gym.ObservationWrapper):
+    "Stacks the first and last observations together to get more temporal distance at less compute."
     def __init__(self, env):
         super().__init__(env)
         o = self.observation_space
