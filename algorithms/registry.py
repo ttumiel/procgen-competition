@@ -1,14 +1,14 @@
 """
 Registry of custom implemented algorithms names
 
-Please refer to the following examples to add your custom algorithms : 
+Please refer to the following examples to add your custom algorithms :
 
 - AlphaZero : https://github.com/ray-project/ray/tree/master/rllib/contrib/alpha_zero
 - bandits : https://github.com/ray-project/ray/tree/master/rllib/contrib/bandits
 - maddpg : https://github.com/ray-project/ray/tree/master/rllib/contrib/maddpg
 - random_agent: https://github.com/ray-project/ray/tree/master/rllib/contrib/random_agent
 
-An example integration of the random agent is shown here : 
+An example integration of the random agent is shown here :
 - https://github.com/AIcrowd/neurips2020-procgen-starter-kit/tree/master/algorithms/custom_random_agent
 """
 
@@ -22,7 +22,12 @@ def _import_random_policy():
     return RandomPolicyTrainer
 
 
+def _import_ppo_rnd():
+    from .ppo_rnd import PPOTrainer_RND
+    return PPOTrainer_RND
+
 CUSTOM_ALGORITHMS = {
     "custom/CustomRandomAgent": _import_custom_random_agent,
-    "RandomPolicy": _import_random_policy
+    "RandomPolicy": _import_random_policy,
+    "PPO_RND": _import_ppo_rnd
 }
