@@ -50,10 +50,10 @@ procgen-ppo:
         num_sgd_iter: 3
         batch_mode: truncate_episodes
 
-        # vf_loss_coeff: 0.5
+        vf_loss_coeff: 0.5
         entropy_coeff: 0.01
         clip_param: 0.2
-        # vf_clip_param: 0.2
+        vf_clip_param: 30
 
         normalize_actions: False
         clip_rewards: null
