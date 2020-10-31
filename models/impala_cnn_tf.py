@@ -8,7 +8,7 @@ tf1,tf,tfv = try_import_tf()
 def conv_layer(depth, name, st=1, act=None):
     return tf.keras.layers.Conv2D(
         filters=depth, kernel_size=3, strides=st, padding="same", name=name, activation=act,
-        kernel_regularizer=tf.keras.regularizers.L2(0.001)
+        # kernel_regularizer=tf.keras.regularizers.L2(0.001)
         # kernel_initializer=tf.keras.initializers.he_normal()
     )
 
