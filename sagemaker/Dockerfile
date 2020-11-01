@@ -13,8 +13,15 @@ RUN pip install --upgrade \
     lz4 \
     psutil
 
-RUN pip install procgen==0.10.1
-RUN pip install mlflow==1.8.0
+COPY requirements.txt ${HOME_DIR}
+
+RUN pip install -r requirements.txt --no-cache-dir
+# -f https://download.pytorch.org/whl/torch_stable.html
+# RUN python -c "import torchvision.models as m; [f(pretrained=True) for f in [m.resnet34, m.resnet18, m.resnet50]]"
+RUN python -c "import tensorflow.keras.applications as m; [f(input_shape=(96,96,3),include_top=False,weights='imagenet') for f in [m.MobileNetV2]]"
+
+RUN pip install -U gym
+RUN pip install tensorflow-addons
 
 # Log in to dockerized SSH daemon service
 RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
@@ -31,3 +38,5 @@ WORKDIR /opt/ml/code
 # Expose port 22 for SSH login
 EXPOSE 22
 CMD    ["/usr/sbin/sshd", "-D"]
+
+# ENTRYPOINT []

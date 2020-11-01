@@ -23,7 +23,7 @@ from procgen_ray_launcher import ProcgenSageMakerRayLauncher
 
 from ray_experiment_builder import RayExperimentBuilder
 
-from utils.loader import load_algorithms, load_preprocessors
+from utils.loader import load_algorithms, load_preprocessors, load_models
 try:
     from procgen.envs.procgen_env_wrapper import ProcgenEnvWrapper
     from procgen.envs.framestack import FrameStack
@@ -47,26 +47,22 @@ class MyLauncher(ProcgenSageMakerRayLauncher):
     def _get_rllib_config(self):
         return {
             "queue_trials": True,
-            "config_file": "experiments/impala.yaml"
+            "config_file": "experiments/ppo.yaml"
         }
 
     def register_algorithms_and_preprocessors(self):
         try:
             from custom.algorithms import CUSTOM_ALGORITHMS
             from custom.preprocessors import CUSTOM_PREPROCESSORS
-            from custom.models.my_vision_network import MyVisionNetwork
-            from custom.models.impala_cnn_tf import ImpalaCNN
         except ModuleNotFoundError:
             from algorithms import CUSTOM_ALGORITHMS
             from preprocessors import CUSTOM_PREPROCESSORS
-            from models.my_vision_network import MyVisionNetwork
-            from models.impala_cnn_tf import ImpalaCNN
 
         load_algorithms(CUSTOM_ALGORITHMS)
-
         load_preprocessors(CUSTOM_PREPROCESSORS)
-        ModelCatalog.register_custom_model("my_vision_network", MyVisionNetwork)
-        ModelCatalog.register_custom_model("impala_cnn_tf", ImpalaCNN)
+        load_models(os.getcwd())
+        # ModelCatalog.register_custom_model("my_vision_network", MyVisionNetwork)
+        # ModelCatalog.register_custom_model("impala_cnn_tf", ImpalaCNN)
 
     def get_experiment_config(self):
         params = dict(self._get_ray_config())

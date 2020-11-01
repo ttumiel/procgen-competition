@@ -34,7 +34,7 @@ class Cluster(Enum):
 
 class SageMakerRayLauncher(object):
     """Base class for SageMaker RL applications using Ray-RLLib.
-    Customers should sub-class this, fill in the required methods, and 
+    Customers should sub-class this, fill in the required methods, and
     call .train_main() to start a training process.
 
     Example::
@@ -47,7 +47,7 @@ class SageMakerRayLauncher(object):
         class MyLauncher(SageMakerRayLauncher):
             def register_env_creator(self):
                 register_env("RoboschoolHumanoid-v1", create_environment)
-                
+
             def get_experiment_config(self):
                 return {
                   "training": {
@@ -98,7 +98,7 @@ class SageMakerRayLauncher(object):
         # TODO: move this to before customer-specified so they can override
         hyperparams_dict["rl.training.local_dir"] = INTERMEDIATE_DIR
         hyperparams_dict["rl.training.checkpoint_at_end"] = True
-                
+
         hyperparams_dict["rl.training.checkpoint_freq"] = config['training'].get('checkpoint_freq', 10)
 
         self.hyperparameters = ConfigurationList()  # TODO: move to shared
@@ -124,7 +124,7 @@ class SageMakerRayLauncher(object):
 
     def ray_init_config(self):
         num_workers = max(self.num_cpus, 3)
-        config = {"num_cpus": num_workers, "num_gpus": self.num_gpus, "webui_host": '127.0.0.1'}
+        config = {"num_cpus": num_workers, "num_gpus": self.num_gpus} # , "webui_host": '127.0.0.1'
 
         # Start ssh on all nodes
         start_cmd = "service ssh start"
@@ -293,7 +293,7 @@ class SageMakerRayLauncher(object):
         else:
             if validation is not 2:
                 raise RuntimeError("Failed to find .tune_metadata or .extra_data to restore checkpoint")
-                
+
         if checkpoint_file_in_container:
             print("Found checkpoint: %s. Setting `restore` path in ray config." %checkpoint_file_in_container)
             config['training']['restore'] = checkpoint_file_in_container
@@ -301,7 +301,7 @@ class SageMakerRayLauncher(object):
             print("No valid checkpoint found in %s. Training from scratch." %checkpoint_dir)
 
         return config
-    
+
     def _checkpoint_dir_finder(self, current_dir=None):
         current_dir_subfolders = os.walk(current_dir).__next__()[1]
         if len(current_dir_subfolders) > 1:
@@ -327,7 +327,7 @@ class SageMakerRayLauncher(object):
         experiment_config = self.get_experiment_config()
         experiment_config = self.customize_experiment_config(experiment_config)
         experiment_config = self.set_up_checkpoint(experiment_config)
-        
+
         print("Important! Ray with version <=7.2 may report \"Did not find checkpoint file\" even if the",
               "experiment is actually restored successfully. If restoration is expected, please check",
               "\"training_iteration\" in the experiment info to confirm."

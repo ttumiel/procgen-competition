@@ -10,12 +10,35 @@ from ray.rllib.agents.callbacks import DefaultCallbacks
 
 import numpy as np
 
+from transforms import get_tfms
+
+class AugmentObservations(DefaultCallbacks):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tfms = get_tfms(p=0.3)
+
+    def on_postprocess_trajectory(
+            self, worker: RolloutWorker, episode: MultiAgentEpisode,
+            agent_id: str, policy_id: str,
+            policies: Dict[str, Policy], postprocessed_batch: SampleBatch,
+            original_batches: Dict[str, SampleBatch], **kwargs):
+        postprocessed_batch['obs'] = self.tfms(postprocessed_batch['obs'])
+
+class RewardClip(DefaultCallbacks):
+    def on_postprocess_trajectory(
+        self, worker: RolloutWorker, episode: MultiAgentEpisode,
+        agent_id: str, policy_id: str,
+        policies: Dict[str, Policy], postprocessed_batch: SampleBatch,
+        original_batches: Dict[str, SampleBatch], **kwargs):
+        r = postprocessed_batch['rewards']
+        postprocessed_batch['rewards'] = np.sign(r)*(np.sqrt(np.abs(r)+1)-1)+0.001*r
+
 class CustomCallbacks(DefaultCallbacks):
     """
-    Please refer to : 
+    Please refer to :
         https://github.com/ray-project/ray/blob/master/rllib/examples/custom_metrics_and_callbacks.py
         https://docs.ray.io/en/latest/rllib-training.html#callbacks-and-custom-metrics
-    for examples on adding your custom metrics and callbacks. 
+    for examples on adding your custom metrics and callbacks.
 
     This code adapts the documentations of the individual functions from :
     https://github.com/ray-project/ray/blob/master/rllib/agents/callbacks.py
@@ -73,7 +96,7 @@ class CustomCallbacks(DefaultCallbacks):
             kwargs: Forward compatibility placeholder.
         """
         ######################################################################
-        # An example of adding a custom metric from the latest observation 
+        # An example of adding a custom metric from the latest observation
         # from your env
         ######################################################################
         # last_obs_object_from_episode = episode.last_observation_for()

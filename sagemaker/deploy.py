@@ -17,7 +17,7 @@ ENVS = ["coinrun", "bigfish", "bossfight", "caveflyer",
         "fruitbot", "heist", "jumper", "leaper", "maze",
         "miner", "ninja", "plunder", "starpilot"]
 MACHINE_TYPE = {
-    'V100': 'ml.p3.8xlarge',
+    'V100': 'ml.p3.2xlarge',
     'T4': 'ml.g4dn.4xlarge'
 }
 METRICS =  [
@@ -44,7 +44,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--gpu', type=str, default='T4')
     # parser.add_argument('-f', type=str, default='tf')
-    parser.add_argument('--spot', action='store_true')
+    parser.add_argument('--demand', action='store_true')
     parser.add_argument('--envs', type=str, default='coinrun', help="One of {}".format(ENVS))
 
     args = parser.parse_args()
@@ -59,7 +59,7 @@ def main():
 
     for env in envs_to_run:
         print("Deploying {}.".format(env))
-        if args.spot:
+        if not args.demand:
             job_name = 'sm-ray-dist-procgen-spot-' + time.strftime("%Y-%m-%d-%H-%M-%S", time.gmtime()) + "-" + env
             checkpoint_s3_uri = 's3://{}/sagemaker-procgen/checkpoints/{}'.format(S3_BUCKET, job_name)
             training_params = {
@@ -92,7 +92,7 @@ def main():
                                 hyperparameters=hyperparameters,
                                 **training_params
                             )
-        if args.spot:
+        if not args.demand:
             estimator.fit(job_name=job_name, wait=False)
         else:
             estimator.fit(wait=False)

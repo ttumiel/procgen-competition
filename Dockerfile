@@ -44,6 +44,7 @@ RUN adduser --disabled-password \
     ${USER_NAME}
 
 COPY . ${HOME_DIR}
+# COPY requirements.txt ${HOME_DIR}
 
 RUN chown -R ${USER_NAME}:${USER_NAME} ${HOME_DIR}
 
