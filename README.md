@@ -4,7 +4,9 @@
 
 [Procgen](https://github.com/openai/procgen) environment efficiency and generalisation [challenge](https://www.aicrowd.com/challenges/neurips-2020-procgen-competition).
 
-For training logs/ideas, see [`LOGS.md`](./LOGS.md).
+My solution placed 4th overall in the generalization track and 9th in the sample efficiency track. For training logs/ideas, see [`LOGS.md`](./LOGS.md).
+
+Read the Arxiv paper of all the top solutions [here](https://arxiv.org/abs/2103.15332).
 
 - [Docker](#docker)
 - [Sagemaker](#sagemaker)
